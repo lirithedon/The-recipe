@@ -19,11 +19,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['title'], $_POST['conte
     $title = filter_var($_POST['title'], FILTER_SANITIZE_STRING);
     $content = filter_var($_POST['content'], FILTER_SANITIZE_STRING);
 
-    // Call the saveImage function to handle the uploaded image
-    $imagePath = saveImage($_FILES['recipeImage'], $user_id);
+    $imagePath = ''; // Initialize image path variable
 
-    if ($imagePath) {
-        // Image uploaded successfully, proceed to insert recipe into the database
+    // Check if file was uploaded without errors
+    if (isset($_FILES['recipeImage']) && $_FILES['recipeImage']['error'] === UPLOAD_ERR_OK) {
+        $tempName = $_FILES['recipeImage']['tmp_name'];
+        $fileName = $_FILES['recipeImage']['name'];
+        $destination = 'uploads/' . uniqid('', true) . '-' . $fileName; // Change here
+
+        // Copy uploaded file to destination
+        if (copy($tempName, $destination)) {
+            $imagePath = $destination;
+        } else {
+            echo "<script>alert('Error uploading file.');</script>";
+        }
+    } else {
+        echo "<script>alert('Error uploading file.');</script>";
+    }
+
+    // Proceed if image was copied successfully
+    if (!empty($imagePath)) {
+        // Proceed to insert recipe into the database
         $stmt = $db->prepare("INSERT INTO recipes (user_id, title, content, image_path, date_posted) VALUES (?, ?, ?, ?, NOW())");
         if ($stmt->execute([$user_id, $title, $content, $imagePath])) {
             echo "<script>alert('Recipe created successfully.');</script>";
@@ -31,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['title'], $_POST['conte
             echo "<script>alert('Error creating recipe.');</script>";
         }
     }
-    // If $imagePath is null, the saveImage function will have already outputted an error message
 }
 
 // Handle recipe deletion

@@ -49,3 +49,43 @@ function logout() {
     })
     .catch(error => console.error('Error:', error));
 }
+function uploadImage() {
+    var fileInput = document.getElementById("imageInput");
+    var file = fileInput.files[0];
+    var formData = new FormData();
+    formData.append("image", file);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "upload.php", true);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            console.log("Image uploaded successfully.");
+        } else {
+            console.error("Error uploading image.");
+        }
+    };
+    xhr.send(formData);
+}
+function submitRecipe() {
+    var title = document.getElementById('title').value;
+    var content = document.getElementById('content').value;
+    var fileInput = document.getElementById('recipeImage');
+    var file = fileInput.files[0];
+    var formData = new FormData();
+
+    formData.append('title', title);
+    formData.append('content', content);
+    formData.append('recipeImage', file);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'profile.php', true);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            alert('Recipe created successfully.');
+            location.reload(); // Refresh the page after successful upload
+        } else {
+            alert('Error creating recipe.');
+        }
+    };
+    xhr.send(formData);
+}

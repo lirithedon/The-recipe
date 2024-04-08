@@ -43,6 +43,37 @@ function logIn($username, $password) {
         return ['success' => false, 'message' => 'Invalid username or password.']; // Login failed
     }
 }
+// Function to check if a comment belongs to the current user for a specific recipe
+function isUserCommentInRecipe($commentId, $userId, $recipeId) {
+    $db = connectDb();
+    try {
+        $stmt = $db->prepare("SELECT COUNT(*) FROM ratings WHERE id = ? AND user_id = ? AND recipe_id = ?");
+        $stmt->execute([$commentId, $userId, $recipeId]);
+        $count = $stmt->fetchColumn();
+        return $count > 0; // Return true if the comment belongs to the user and the recipe, false otherwise
+    } catch(PDOException $e) {
+        // Handle database error
+        return false;
+    }
+}
+
+// Function to delete a comment by comment ID
+function deleteComment($commentId) {
+    $db = connectDb();
+    try {
+        $stmt = $db->prepare("DELETE FROM ratings WHERE id = ?");
+        $stmt->execute([$commentId]);
+        // Check if deletion was successful
+        if ($stmt->rowCount() > 0) {
+            return ['success' => true];
+        } else {
+            return ['error' => 'Failed to delete comment'];
+        }
+    } catch(PDOException $e) {
+        // Handle database error
+        return ['error' => $e->getMessage()];
+    }
+}
 
 function saveImage($file, $directory)
 {
@@ -98,18 +129,6 @@ function logOut() {
 function isLoggedIn() {
     return isset($_SESSION['user_id']);
 }
-
-// Example Usage (not to be included in functions.php):
-/*
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['action']) && $_POST['action'] === 'signup') {
-        // Call signUp function and handle response
-    } elseif (isset($_POST['action']) && $_POST['action'] === 'login') {
-        // Call logIn function and handle response
-    }
-}
-*/
-// inc/functions.php
 
 // Function to retrieve comments for a recipe from the database
 function getComments($recipeId) {
@@ -221,6 +240,55 @@ function editRecipe($recipeId, $title, $content, $image) {
         }
     } else {
         return false; // Failed to upload image
+    }
+}
+function validateRecipeId($recipeId) {
+    $db = connectDb();
+    try {
+        $stmt = $db->prepare("SELECT COUNT(*) FROM recipes WHERE id = ?");
+        $stmt->execute([$recipeId]);
+        $count = $stmt->fetchColumn();
+        return $count > 0; // Return true if recipe_id exists, false otherwise
+    } catch(PDOException $e) {
+        // Handle database error
+        return false;
+    }
+}
+
+function isUserComment($commentId, $userId) {
+    $db = connectDb();
+    try {
+        $stmt = $db->prepare("SELECT COUNT(*) FROM ratings WHERE id = ? AND user_id = ?");
+        $stmt->execute([$commentId, $userId]);
+        $count = $stmt->fetchColumn();
+        return $count > 0; // Return true if the comment belongs to the user, false otherwise
+    } catch(PDOException $e) {
+        // Handle database error
+        return false;
+    }
+}
+// Function to retrieve a comment by its ID
+function getCommentById($commentId) {
+    $db = connectDb();
+    try {
+        $stmt = $db->prepare("SELECT * FROM ratings WHERE id = ?");
+        $stmt->execute([$commentId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch(PDOException $e) {
+        // Handle database error
+        return false;
+    }
+}
+
+// Function to update a comment in the database
+function updateComment($commentId, $newComment) {
+    $db = connectDb();
+    try {
+        $stmt = $db->prepare("UPDATE ratings SET comment = ? WHERE id = ?");
+        return $stmt->execute([$newComment, $commentId]);
+    } catch(PDOException $e) {
+        // Handle database error
+        return false;
     }
 }
 
