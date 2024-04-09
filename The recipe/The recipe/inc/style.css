@@ -1,0 +1,555 @@
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Typography */
+body {
+  font-family: 'Arial', sans-serif;
+}
+
+/* Navigation Bar */
+header nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em;
+  background: #333;
+  color: #fff;
+}
+
+#nav-links a {
+  color: #fff;
+  text-decoration: none;
+  margin-left: 1em;
+}
+
+#nav-links a:hover {
+  text-decoration: underline;
+}
+
+/* Main Content */
+main {
+  padding: 2em;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1em;
+  background: #333;
+  color: #fff;
+}
+
+/* Login Modal */
+.modal {
+  display: none; /* Hidden by default */
+  /* More styles for the modal */
+}
+
+@media screen and (max-width: 600px) {
+  /* Responsive styles */
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f4f4;
+}
+
+.navbar {
+  background-color: #333;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5em 1em;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+}
+
+.profile-container {
+  max-width: 800px;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-form form,
+.user-recipes div {
+  margin-bottom: 20px;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+button {
+  background-color: #5cb85c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #4cae4c;
+}
+
+.user-recipes div {
+  background: #fafafa;
+  padding: 10px;
+  border-radius: 5px;
+  border-left: 5px solid #5cb85c;
+}
+.user-recipes .recipe {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.user-recipes .recipe h3 {
+  margin-top: 0;
+}
+
+.user-recipes .recipe p {
+  white-space: pre-wrap; /* Respect whitespace and newlines */
+}
+/* Add these styles to your existing CSS file */
+
+/* Welcome Section */
+.welcome-section {
+  background-color: #f9f9f9;
+  padding: 40px;
+  text-align: center;
+}
+
+.welcome-text h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.welcome-text p {
+  font-size: 18px;
+}
+
+/* Just for You Section */
+.just-for-you-section {
+  padding: 40px;
+}
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 20px;
+}
+
+.recipe-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.recipe-card img {
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid #ddd;
+}
+
+.recipe-info {
+  padding: 20px;
+}
+
+.recipe-info h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.recipe-info p {
+  color: #555;
+  margin-bottom: 5px;
+}
+/* Update the CSS to create a 5 by 5 grid layout */
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 columns */
+  grid-gap: 20px;
+}
+
+.recipe-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.recipe-card:hover {
+  transform: translateY(-5px);
+}
+
+.recipe-card img {
+  width: 100%;
+  height: 200px; /* Adjust the height as needed */
+  object-fit: cover;
+  border-bottom: 1px solid #ddd;
+}
+
+.recipe-info {
+  padding: 20px;
+}
+
+.recipe-info h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.recipe-info p {
+  color: #555;
+  margin-bottom: 5px;
+}
+/* Custom CSS */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  padding-top: 20px;
+}
+
+.recipe-detail {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#recipe-title {
+  color: #333;
+}
+
+#recipe-content {
+  color: #555;
+}
+
+#recipe-date {
+  color: #777;
+  margin-bottom: 10px;
+}
+
+#recipe-image {
+  max-width: 100%;
+  height: auto;
+  margin-top: 20px;
+}
+
+#comment-section {
+  margin-top: 30px;
+}
+
+#comment-section h3 {
+  color: #333;
+}
+
+.comment {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.comment-content {
+  color: #555;
+}
+
+.comment-date {
+  color: #777;
+  margin-top: 5px;
+}
+
+#comment-form {
+  margin-top: 30px;
+}
+
+#comment-form h3 {
+  color: #333;
+}
+
+#comment {
+  resize: none;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}/* Modal styles */
+.modal {
+  display: none; /* Hide the modal by default */
+  position: fixed; /* Position it relative to the viewport */
+  z-index: 1; /* Make sure it appears above other content */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Allow scrolling if modal content exceeds viewport height */
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto; /* Adjust margin for vertical alignment */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px; /* Limit maximum width */
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+/* Update the CSS in style.css */
+
+.category-container {
+  display: flex; /* Use flexbox to display items horizontally */
+  justify-content: space-around; /* Adjust as needed */
+  align-items: center; /* Align items vertically */
+}
+
+.circle {
+  transition: transform 0.3s, background-color 0.3s; /* Apply transition effect to zoom and background color change */
+
+  width: 120px; /* Adjust as needed */
+  height: 120px; /* Adjust as needed */
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 10px; /* Adjust as needed */
+}
+
+.circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Add these styles to your existing CSS file or create a new one */
+
+/* Product container */
+.product-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 20px;
+}
+
+/* Product image */
+.product-image img {
+  width: 300px; /* Adjust the width as needed */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Product details */
+.product-details {
+  max-width: 500px;
+  margin-left: 20px;
+}
+
+/* Comment form */
+.comment-form {
+  max-width: 500px;
+  margin: 20px;
+}
+
+.comment-form label,
+.comment-form textarea,
+.comment-form select,
+.comment-form button {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.comment-form textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.comment-form select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.comment-form button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.comment-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Comments */
+.comment {
+  margin: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.comment p {
+  margin-bottom: 10px;
+}
+
+.action-buttons button {
+  margin-right: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.action-buttons button:hover {
+  background-color: #eee;
+}
+
+.top-rated-section{
+  padding: 4%;
+}
+/* CSS for recipe details page */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    color: #333;
+}
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+.recipe-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 40px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.recipe-image {
+  flex: 0 0 45%;
+  max-width: 45%;
+  overflow: hidden;
+}
+.recipe-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px 0 0 10px;
+}
+.recipe-details {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding: 20px;
+}
+.recipe-details h2 {
+  margin-top: 0;
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.recipe-info {
+  margin-bottom: 20px;
+}
+.recipe-info p {
+  margin: 5px 0;
+  font-size: 18px;
+}
+.ingredient-list {
+  list-style-type: none;
+  padding: 0;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+.ingredient-list li {
+  margin-bottom: 5px;
+}
+.comment-form label, .comment-form textarea, .comment-form button {
+  display: block;
+  margin-bottom: 10px;
+}
+.comment-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none;
+}
+.comment-form button {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.comment-form button:hover {
+  background-color: #45a049;
+}
+.comment {
+  background-color: #f9f9f9;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+.comment p {
+  margin: 5px 0;
+}
+.comment-form .action-buttons {
+  display: flex;
+  justify-content: space-between;
+}        .circle:hover {
+  background-color: rgba(255, 255, 255, 0.8); /* Change background color on hover */
+  transform: scale(1.1); /* Zoom out by 10% on hover */
+}
