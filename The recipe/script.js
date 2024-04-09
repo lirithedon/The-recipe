@@ -12,6 +12,7 @@ function showSignUpModal() {
 
 function closeSignUpModal() {
     document.getElementById('signupModal').style.display = 'none';
+    
 }function login() {
     var formData = new FormData(document.getElementById('loginForm'));
     
@@ -88,4 +89,24 @@ function submitRecipe() {
         }
     };
     xhr.send(formData);
+}
+function submitSignUp() {
+    var formData = new FormData(document.getElementById('signupForm'));
+
+    fetch('functions.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            closeSignUpModal();
+            // Optionally, you can perform additional actions after successful sign-up
+        } else {
+            alert(data.message);
+            // Optionally, you can handle the failure scenario
+        }
+    })
+    .catch(error => console.error('Error:', error));
 }

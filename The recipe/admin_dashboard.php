@@ -33,17 +33,12 @@ $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Page</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script> <!-- Add this line to include the script -->
+
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <div id="logo"><a href="index.php">The Recipe</a></div>
-            <div id="nav-links">
-                <a href="index.php">Home</a>
-                <a href="inc/logout.php">Logout</a>
-            </div>
-        </nav>
-    </header>
+<?php generateNavbar($isLoggedIn); ?>
+
 
     <main class="admin-container">
         <h2>All Recipes</h2>
