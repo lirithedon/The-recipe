@@ -15,6 +15,23 @@ function connectDb() {
         exit("Error: " . $e->getMessage());
     }
 }
+// Function to retrieve the account type of the logged-in user
+function getAccountType() {
+    if (isset($_SESSION['user_id'])) {
+        $db = connectDb();
+        try {
+            $stmt = $db->prepare("SELECT account_type FROM users WHERE id = ?");
+            $stmt->execute([$_SESSION['user_id']]);
+            $accountType = $stmt->fetchColumn();
+            return $accountType ? $accountType : 'regular'; // Return the account type or 'regular' if not found
+        } catch(PDOException $e) {
+            // Handle database error
+            return 'regular'; // Return 'regular' in case of error
+        }
+    } else {
+        return 'regular'; // Return 'regular' if user is not logged in
+    }
+}
 
 // Sign-up function
 function signUp($username, $email, $password) {
@@ -48,14 +65,32 @@ function logIn($username, $password) {
     $stmt = $db->prepare("SELECT * FROM users WHERE username = ?");
     $stmt->execute([$username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
     if ($user && password_verify($password, $user['password'])) {
+        // Debugging: Output user data
+        echo "Logged in user data: " . print_r($user, true) . "<br>";
+
+        // Set session variables including account_type
         $_SESSION['user_id'] = $user['id'];
-        $_SESSION['username'] = $user['username'];
-        return ['success' => true]; // Login successful
+        $_SESSION['account_type'] = $user['account_type']; // Assuming 'account_type' column exists in your users table
+
+        // Debugging: Output session data
+        echo "Session data after login: " . print_r($_SESSION, true) . "<br>";
+
+        // Redirect to appropriate page based on account type
+        if ($_SESSION['account_type'] === 'admin') {
+            header("Location: admin.php");
+            exit();
+        } else {
+            header("Location: profile.php");
+            exit();
+        }
     } else {
-        return ['success' => false, 'message' => 'Invalid username or password.']; // Login failed
+        // If login fails, return false
+        return false;
     }
 }
+
 // Function to check if a comment belongs to the current user for a specific recipe
 function isUserCommentInRecipe($commentId, $userId, $recipeId) {
     $db = connectDb();
@@ -210,7 +245,6 @@ function submitComment($recipeId, $userId, $rating, $comment) {
         return ['error' => $e->getMessage()];
     }
 }
-// functions.php
 
 // Function to create a new recipe
 function createRecipe($title, $content, $image, $userId) {
@@ -294,14 +328,22 @@ function getCommentById($commentId) {
 }
 
 
-function generateNavbar($isLoggedIn) {
+function generateNavbar($isLoggedIn) { 
+    echo "isLoggedIn: " . ($isLoggedIn ? "true" : "false") . "<br>";
+    echo "account_type: " . getAccountType() . "<br>";
+
     ?>
+    
     <!-- Navbar -->
     <nav class="navbar">
         <div id="logo"><a href="index.php">The Recipe</a></div>
         <div id="nav-links">
             <?php if ($isLoggedIn): ?>
-                <a href="profile.php">Profile</a>
+                <?php if (getAccountType() === 'admin'): ?>
+                    <a href="admin_dashboard.php">Admin Dashboard</a> <!-- Link to admin dashboard -->
+                <?php else: ?>
+                    <a href="profile.php">Profile</a>
+                <?php endif; ?>
                 <a href="index.php" onclick="logout()">Logout</a>
             <?php else: ?>
                 <a href="#" onclick="document.getElementById('loginModal').style.display='block'">Login</a>
@@ -309,7 +351,6 @@ function generateNavbar($isLoggedIn) {
             <?php endif; ?>
         </div>
     </nav>
-
     <!-- Login Modal -->
     <div id="loginModal" class="modal">
         <div class="modal-content">
@@ -324,10 +365,8 @@ function generateNavbar($isLoggedIn) {
             </form>
         </div>
     </div>
-
-  
-   <!-- Sign Up Modal -->
-   <div id="signUpModal" class="modal">
+    <!-- Sign Up Modal -->
+    <div id="signUpModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="document.getElementById('signUpModal').style.display='none'">&times;</span>
             <h2>Sign Up</h2>
@@ -416,10 +455,7 @@ function getTopRatedRecipes() {
 }
 // Define the getCategoryName() function to retrieve the category name based on its ID
 function getCategoryName($category_id) {
-    // Replace this with your logic to fetch category name from the database based on category_id
-    // Example: You might have a categories table with category_id and category_name columns
-    // and you would query the database to fetch the category name based on the category_id
-    // Here, for demonstration purposes, we'll just return a static category name based on category_id
+
     switch ($category_id) {
         case 1:
             return 'Meat';
@@ -435,6 +471,7 @@ function getCategoryName($category_id) {
             return 'Unknown';
     }
 }
+
 function handleFormActions() {
     if(isset($_SESSION['user_id'])) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {

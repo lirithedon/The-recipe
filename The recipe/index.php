@@ -1,6 +1,7 @@
 <?php
 // Start the session to access session variables
 session_start();
+
 // Function to connect to the database
 require_once 'inc/functions.php';
 // Database connection
@@ -74,9 +75,9 @@ $isLoggedIn = isset($_SESSION['user_id']);
         <?php foreach ($topRatedRecipes as $recipe): ?>
             <a href="detail_product.php?recipe_id=<?php echo $recipe['id']; ?>" class="recipe-link">
                 <div class="recipe-card">
-                    <img src="<?php echo htmlspecialchars($recipe['image_path']); ?>" alt="<?php echo htmlspecialchars($recipe['title']); ?>">
+                    <img src="<?php echo ($recipe['image_path']); ?>" alt="<?php echo ($recipe['title']); ?>">
                     <div class="recipe-info">
-                        <h3><?php echo htmlspecialchars($recipe['title']); ?></h3>
+                        <h3><?php echo ($recipe['title']); ?></h3>
                         <p>Average Rating: <?php echo number_format($recipe['avg_rating'], 1); ?>/5 <?php echo str_repeat('&#9733;', round($recipe['avg_rating'])); ?></p> 
                     </div>
                 </div>
@@ -94,10 +95,18 @@ $isLoggedIn = isset($_SESSION['user_id']);
                 <?php foreach ($recipes as $recipe): ?>
                     <a href="detail_product.php?recipe_id=<?php echo $recipe['id']; ?>" class="recipe-link">
                         <div class="recipe-card">
-                            <img src="<?php echo htmlspecialchars($recipe['image_path']); ?>" alt="<?php echo htmlspecialchars($recipe['title']); ?>">
+                            <img src="<?php echo ($recipe['image_path']); ?>" alt="<?php echo htmlspecialchars($recipe['title']); ?>">
                             <div class="recipe-info">
-                                <h3><?php echo htmlspecialchars($recipe['title']); ?></h3>
-                                <p>Uploaded by: <?php echo htmlspecialchars($recipe['user_id']); ?></p>
+                                <h3><?php echo ($recipe['title']); ?></h3>
+                                <?php
+                                        $user = getUserById($recipe['user_id']);
+                                        if ($user) {
+                                            $username = ($user['username']);
+                                        } else {
+                                            $username = 'Unknown';
+                                        }
+                                        ?>
+                                <p>Uploaded by: <?php echo $username; ?></p>
                                 <p>Average Rating: <?php echo calculateAverageRating($recipe['id']); ?>/5</p> <!-- Display average rating -->
                             </div>
                         </div>
@@ -110,22 +119,6 @@ $isLoggedIn = isset($_SESSION['user_id']);
     <footer>
         <p>&copy; 2024 The Recipe Community</p>
     </footer>
-
-    <script>
-        // Get the modal elements
-        var loginModal = document.getElementById('loginModal');
-        var signUpModal = document.getElementById('signUpModal');
-
-        // Close the modal when clicking outside of it
-        window.onclick = function(event) {
-            if (event.target == loginModal) {
-                loginModal.style.display = "none";
-            }
-            if (event.target == signUpModal) {
-                signUpModal.style.display = "none";
-            }
-        }
-    </script>
 
 </body>
 </html>

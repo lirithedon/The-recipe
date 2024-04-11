@@ -3,7 +3,7 @@ session_start();
 
 // Check if user is logged in and is an admin
 if (!isset($_SESSION['user_id']) || $_SESSION['account_type'] !== 'admin') {
-    header("Location: index.php"); // Redirect unauthorized users to the homepage
+    header("Location: admin.php"); // Redirect unauthorized users to the homepage
     exit;
 }
 
