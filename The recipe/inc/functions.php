@@ -267,7 +267,21 @@ function createRecipe($title, $content, $image, $userId) {
         return false; // Failed to upload image
     }
 }
+// Function to get a user's username by their ID
+function getUsernameById($user_id) {
+    // Connect to the database
+    $db = connectDb();
 
+    // Prepare and execute the query to fetch the username
+    $stmt = $db->prepare("SELECT username FROM users WHERE id = ?");
+    $stmt->execute([$user_id]);
+
+    // Fetch the username from the database
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Return the username
+    return $user['username'];
+}
 // Function to edit an existing recipe
 function editRecipe($recipeId, $title, $content, $image) {
     $db = connectDb(); // Connect to the database
@@ -472,6 +486,13 @@ function getCategoryName($category_id) {
     }
 }
 
+
+function updateUserAccountType($db, $user_id, $new_account_type) {
+    // Prepare and execute SQL query to update account type
+    $stmt = $db->prepare("UPDATE users SET account_type = ? WHERE id = ?");
+    return $stmt->execute([$new_account_type, $user_id]);
+}
+
 function handleFormActions() {
     if(isset($_SESSION['user_id'])) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -525,7 +546,16 @@ function handleFormActions() {
             }
         }
     } 
+    
 }
+// functions.php
+
+// Function to delete a user
+function deleteUser($db, $user_id) {
+    $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
+    return $stmt->execute([$user_id]);
+}
+
 
 // Check if the user is logged in
 $isLoggedIn = isLoggedIn();

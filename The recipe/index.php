@@ -7,9 +7,17 @@ require_once 'inc/functions.php';
 // Database connection
 $db = connectDb();
 
-// Fetch all recipes from the database
-$stmt = $db->query("SELECT * FROM recipes ORDER BY date_posted DESC");
-$recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Fetch all recipes from the database if no category is selected
+if (!isset($_GET['category'])) {
+    $stmt = $db->query("SELECT * FROM recipes ORDER BY date_posted DESC");
+    $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    // Fetch recipes of the selected category
+    $category_id = $_GET['category'];
+    $stmt = $db->prepare("SELECT * FROM recipes WHERE category_id = ? ORDER BY date_posted DESC");
+    $stmt->execute([$category_id]);
+    $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 // Fetch top 5 highest rated recipes
 $topRatedRecipes = getTopRatedRecipes(); // Assuming getTopRatedRecipes() function is defined in functions.php
@@ -26,7 +34,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
     <title>The Recipe - Home</title>
     <link rel="stylesheet" href="inc/style.css">  
     <script src="script.js"></script> <!-- Add this line to include the script -->
-
+ 
 </head>
 <body>
 
@@ -42,28 +50,28 @@ $isLoggedIn = isset($_SESSION['user_id']);
         </section>
 
         <!-- Section 2: Category Section -->
-        <section class="category-section">
+        <section class="just-for-you-section">
             <h2>Explore Categories</h2>
             <div class="category-container">
                 <!-- Circle 1: Vegan -->
                 <div class="circle">
-                    <img src="img/vegan.png" alt="Vegan">
+                    <a href="?category=1"><img src="img/vegan.png" alt="Vegan"></a>
                 </div>
                 <!-- Circle 2: Meat -->
                 <div class="circle">
-                    <img src="img/meat.png" alt="Meat">
+                    <a href="?category=2"><img src="img/meat.png" alt="Meat"></a>
                 </div>
                 <!-- Circle 3: Gluten-Free -->
                 <div class="circle">
-                    <img src="img/free.png" alt="Gluten-Free">
+                    <a href="?category=3"><img src="img/free.png" alt="Gluten-Free"></a>
                 </div>
                 <!-- Circle 4: Insert your category here -->
                 <div class="circle">
-                    <img src="img/milk-box.png" alt="circle">
+                    <a href="?category=4"><img src="img/milk-box.png" alt="circle"></a>
                 </div>
                 <!-- Circle 5: Insert your category here -->
                 <div class="circle">
-                    <img src="img/harvest.png" alt="fruit">
+                    <a href="?category=5"><img src="img/harvest.png" alt="fruit"></a>
                 </div>
             </div>
         </section>

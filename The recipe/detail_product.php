@@ -24,153 +24,134 @@ $comments = getComments($recipeId);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $recipe['title']; ?></title>
     <link rel="stylesheet" href="inc/style.css">
-    <script src="script.js"></script> <!-- Add this line to include the script -->
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Add Font Awesome for star icons -->
     <style>
-   /* Global Styles */
-body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
+        /* Global Styles */
+        
 
-/* Container for the entire page content */
-.container {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        /* Container for the entire page content */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-/* Header Styles */
-.header {
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .header .title {
+            margin: 0;
+            color: #333;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            display: flex;
+        }
+
+        /* Recipe Image */
+        .recipe-image img {
+            width: 400px;
+            height: auto;
+            border-radius: 4px;
+            margin-right: 20px;
+        }
+
+        /* Recipe Details */
+        .recipe-details {
+            flex-grow: 1;
+        }
+
+        .recipe-details h1 {
+            margin-top: 0;
+            color: #e67e22;
+        }
+
+        
+        .comment-form {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .comment-form textarea,
+        .comment-form select,
+        .comment-form input[type="submit"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .comment {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .comment p {
+            margin: 0 0 10px 0;
+        }
+
+        .comment .meta {
+            font-size: 0.8em;
+            color: #888;
+        }
+
+        .comment .actions {
+            text-align: right;
+        }
+
+        .comment .actions button {
+            background-color: #e67e22;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .comment .actions button:hover {
+            background-color: #d35400;
+        }
+
+/* Star Rating Styles */
+.star-rating {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #eee;
-    margin-bottom: 20px;
+    flex-direction: row-reverse; /* Reverse the direction to make it left-to-right */
+    justify-content: flex-end; /* Align items to the start of the flex container (left side) */
+
 }
 
-.header .title {
-    margin: 0;
-    color: #333;
+.star-rating input[type="radio"] {
+    display: none;
 }
 
-/* Main Content Styles */
-.main-content {
-    display: flex;
-}
-
-/* Recipe Image */
-.recipe-image img {
-    width: 400px;
-    height: auto;
-    border-radius: 4px;
-    margin-right: 20px;
-}
-
-/* Recipe Details */
-.recipe-details {
-    flex-grow: 1;
-}
-
-.recipe-details h1 {
-    margin-top: 0;
-    color: #e67e22;
-}
-
-.recipe-info {
-    font-size: 0.9em;
-    color: #888;
-}
-
-/* Ingredient List */
-.ingredient-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.ingredient-list li {
-    padding: 5px 0;
-}
-
-/* Comment Section */
-.comments-container {
-    margin-top: 40px;
-}
-
-.comment-form {
-    background-color: #f9f9f9;
-    padding: 15px;
-    margin-bottom: 20px;
-}
-
-.comment-form textarea,
-.comment-form select,
-.comment-form input[type="submit"] {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.comment {
-    background-color: #f9f9f9;
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 10px;
-}
-
-.comment p {
-    margin: 0 0 10px 0;
-}
-
-.comment .meta {
-    font-size: 0.8em;
-    color: #888;
-}
-
-.comment .actions {
-    text-align: right;
-}
-
-.comment .actions button {
-    background-color: #e67e22;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
+.star-rating label {
     cursor: pointer;
 }
 
-.comment .actions button:hover {
-    background-color: #d35400;
+.star-rating i {
+    color: #ccc; /* Default star color */
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .main-content {
-        flex-direction: column;
-    }
-
-    .recipe-image img {
-        width: 100%;
-        margin-bottom: 20px;
-    }
-
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .header .title {
-        margin-bottom: 10px;
-    }
+.star-rating input[type="radio"]:checked ~ label i {
+    color: #ffcc00; /* Change color for checked stars */
 }
 
-      
+.star-rating label i:hover,
+.star-rating label i:hover ~ i {
+    color: #ffcc00; /* Change color for hovered stars */
+}
+
     </style>
 </head>
 <body>
@@ -183,24 +164,26 @@ body {
                 <img src="<?php echo $recipe['image_path']; ?>" alt="<?php echo $recipe['title']; ?>">
             </div>
             <div class="recipe-details">
-                <h2><?php echo $recipe['title']; ?></h2>
-                <div class="recipe-info">
-                    <p><strong>Calories:</strong> <?php echo $recipe['calories']; ?></p>
-                    <p><strong>Minutes:</strong> <?php echo $recipe['minutes']; ?></p>
-                </div>
-                <h3>Ingredients:</h3>
-                <ul class="ingredient-list">
-                    <?php
-                    // Assuming ingredients are stored as a comma-separated string in the database
-                    $ingredients = explode(',', $recipe['ingredients']);
-                    foreach ($ingredients as $ingredient) {
-                        echo '<li>' . $ingredient . '</li>';
-                    }
-                    ?>
-                </ul>
-                <p><?php echo $recipe['content']; ?></p>
-                <!-- Add more recipe details here if needed -->
-            </div>
+    <h2><?php echo $recipe['title']; ?></h2>
+    <div class="recipe-info">
+        <p><strong>Calories:</strong> <?php echo $recipe['calories']; ?></p>
+        <p><strong>Minutes:</strong> <?php echo $recipe['minutes']; ?></p>
+        <p><strong>Uploaded by:</strong> <a href="user_profile.php?user_id=<?php echo $recipe['user_id']; ?>"><?php echo getUsernameById($recipe['user_id']); ?></a></p>
+    </div>
+    <h3>Ingredients:</h3>
+    <ul class="ingredient-list">
+        <?php
+        // Assuming ingredients are stored as a comma-separated string in the database
+        $ingredients = explode(',', $recipe['ingredients']);
+        foreach ($ingredients as $ingredient) {
+            echo '<li>' . $ingredient . '</li>';
+        }
+        ?>
+    </ul>
+    <p><?php echo $recipe['content']; ?></p>
+    <!-- Add more recipe details here if needed -->
+</div>
+
         </div>
 
         <!-- Comment form and comments section -->
@@ -208,16 +191,21 @@ body {
             <input type="hidden" name="recipe_id" value="<?php echo $recipeId; ?>">
             <!-- Replace user_id with the actual user ID of the logged-in user -->
             <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
-            <label for="rating">Rating:</label>
-            <select name="rating" id="rating">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
             <label for="comment">Comment:</label>
             <textarea name="comment" id="comment" cols="30" rows="5" required></textarea>
+            <div class="star-rating">
+            <div class="star-rating">
+            <div class="star-rating">
+    <input type="radio" name="rating" id="rate-1" value="1"><label for="rate-1"><i class="fas fa-star"></i></label>
+    <input type="radio" name="rating" id="rate-2" value="2"><label for="rate-2"><i class="fas fa-star"></i></label>
+    <input type="radio" name="rating" id="rate-3" value="3"><label for="rate-3"><i class="fas fa-star"></i></label>
+    <input type="radio" name="rating" id="rate-4" value="4"><label for="rate-4"><i class="fas fa-star"></i></label>
+    <input type="radio" name="rating" id="rate-5" value="5"><label for="rate-5"><i class="fas fa-star"></i></label>
+</div>
+</div>
+
+        </div>
+
             <button type="submit" id="submit-comment">Submit Comment</button>
         </form>
 
@@ -226,7 +214,7 @@ body {
         $comments = getComments($recipeId);
 
         // Display comments on the page
-        foreach ($comments as $comment) {
+       foreach ($comments as $comment) {
             // Display each comment with its rating, username, and date posted
             echo '<div class="comment">';
             echo '<p><strong>Rating: </strong>' . $comment['rating'] . '/5</p>';
