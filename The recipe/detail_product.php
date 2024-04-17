@@ -6,6 +6,8 @@ ini_set('display_errors', 1);
 
 // Check if user is logged in
 handleFormActions();
+// Assuming you have a function to fetch recipes from the database
+$recipes = fetchRecipes(); // Replace fetchRecipes() with the actual function to fetch recipes
 
 // Retrieve recipe details from database based on recipe ID
 $recipeId = $_GET['recipe_id'];
@@ -17,6 +19,7 @@ $averageRating = calculateAverageRating($recipeId);
 $totalComments = count(getComments($recipeId));
 // Retrieve comments for the recipe from the database
 $comments = getComments($recipeId);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -252,5 +255,44 @@ $comments = getComments($recipeId);
         }
         ?>
     </div>
+   <!-- Just for You Section -->
+<section class="just-for-you-section">
+    <h2>Just for You</h2>
+    
+    <div class="recipe-grid">
+        <?php 
+        // Get the category ID of the current recipe
+        $categoryId = $recipe['category_id'];
+
+        // Fetch recipes from the same category
+        $db = connectDb();
+        $stmt = $db->prepare("SELECT * FROM recipes WHERE category_id = ? AND id != ?");
+        $stmt->execute([$categoryId, $recipeId]);
+        $similarRecipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Display similar recipes
+        foreach ($similarRecipes as $similarRecipe): 
+        ?>
+            <a href="detail_product.php?recipe_id=<?php echo $similarRecipe['id']; ?>" class="recipe-link">
+                <div class="recipe-card category-card">
+                    <div class="category-label"><?php echo getCategoryName($similarRecipe['category_id']); ?></div>
+                    <img src="<?php echo $similarRecipe['image_path']; ?>" alt="<?php echo htmlspecialchars($similarRecipe['title']); ?>">
+                    <div class="recipe-info">
+                        <h3><?php echo $similarRecipe['title']; ?></h3>
+                        <?php
+                        $user = getUserById($similarRecipe['user_id']);
+                        $username = $user ? $user['username'] : 'Unknown';
+                        ?>
+                        <p>Uploaded by: <?php echo $username; ?></p>
+                        <p>Average Rating: <?php echo calculateAverageRating($similarRecipe['id']); ?>/5</p> <!-- Display average rating -->
+                    </div>
+                </div>
+            </a>
+        <?php endforeach; ?>
+    </div>
+</section>
+
+
+
 </body>
 </html>

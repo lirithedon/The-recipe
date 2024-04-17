@@ -133,30 +133,4 @@ function toggleCategory(categoryId) {
     
     // Reload page with updated URL
     window.location.href = currentUrl;
-}$(document).ready(function() {
-    $('.like-button').on('click', function() {
-        var commentId = $(this).data('comment-id');
-        var button = $(this);
-
-        // Check if the button is currently liked or unliked
-        var isLiked = button.hasClass('liked');
-
-        // Determine which action to take based on the current state
-        var action = isLiked ? 'unlike_comment_id' : 'like_comment_id';
-
-        $.post("<?php echo $_SERVER['PHP_SELF']; ?>", { action: action, comment_id: commentId }, function(data) {
-            var response = JSON.parse(data);
-            $('#like-count-' + commentId).text(response.like_count + ' likes');  
-            // Toggle class and button text based on the current state
-            if (isLiked) {
-                button.removeClass('liked');
-                button.text('Like');
-            } else {
-                button.addClass('liked');
-                button.text('Unlike');
-            }
-        }).fail(function() {
-            alert('Error processing like/unlike.');
-        });
-    });
-});
+}

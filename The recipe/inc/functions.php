@@ -45,6 +45,22 @@ function signUp($username, $email, $password) {
         return false; // Sign-up failed
     }
 }
+
+// Function to fetch recipes from the database
+function fetchRecipes() {
+    // Connect to the database
+    $db = connectDb();
+    
+    // Prepare and execute the SQL query to fetch recipes
+    $stmt = $db->query("SELECT * FROM recipes");
+    
+    // Fetch all recipes as an associative array
+    $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Return the fetched recipes
+    return $recipes;
+}
+
 // Function to calculate the average rating for a recipe
 function calculateAverageRating($recipeId) {
     $db = connectDb();
@@ -58,6 +74,13 @@ function calculateAverageRating($recipeId) {
         return false;
     }
 }
+function getRecipesByCategory($categoryId, $limit) {
+    $db = connectDb();
+    $stmt = $db->prepare("SELECT * FROM recipes WHERE category_id = ? LIMIT ?");
+    $stmt->execute([$categoryId, (int)$limit]); // Cast $limit to an integer
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
 // Login function
 function logIn($username, $password) {
@@ -573,6 +596,8 @@ function handleFormActions() {
     } 
     
 }
+
+
 
 // Function to delete a user
 function deleteUser($db, $user_id) {
