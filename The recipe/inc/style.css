@@ -1,13 +1,9 @@
 /* Basic Reset */
 * {
-  margin: 0;
+  font-family: "Gill Sans", sans-serif;
+    margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-/* Typography */
-body {
-  font-family: 'Arial', sans-serif;
 }
 
 .welcome-section {
@@ -66,8 +62,7 @@ footer {
   /* Responsive styles */
 }
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
+  font-family: Georgia, serif;  margin: 0;
   padding: 0;
   background: #f4f4f4;
 }
@@ -240,12 +235,7 @@ button:hover {
   color: #555;
   margin-bottom: 5px;
 }
-/* Custom CSS */
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f8f9fa;
-  padding-top: 20px;
-}
+
 
 .recipe-detail {
   background-color: #fff;
@@ -469,13 +459,7 @@ body {
 }
 /* CSS for recipe details page */
 
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f8f8;
-    color: #333;
-}
+
 .container {
   max-width: 1200px;
   margin: 20px auto;
@@ -563,17 +547,13 @@ body {
 .comment-form .action-buttons {
   display: flex;
   justify-content: space-between;
-}        .circle:hover {
-  background-color: rgba(255, 255, 255, 0.8); /* Change background color on hover */
-  transform: scale(1.1); /* Zoom out by 10% on hover */
+}     
+
+.circle:hover {
+  background-color: #ffc107; /* Change to your desired hover color */
+  transform: scale(1.2); /* Zoom out by 10% on hover */
 }
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f8f8f8;
-  margin: 0;
-  padding: 0;
-  color: #333;
-}
+
 
 .profile-container {
   max-width: 800px;
@@ -673,19 +653,79 @@ body {
   .recipe {
       width: 100%;
   }
-
-  // functions.php
-
-// Function to update user's account type
-function updateUserAccountType($db, $user_id, $new_account_type) {
-    $stmt = $db->prepare("UPDATE users SET account_type = ? WHERE id = ?");
-    return $stmt->execute([$new_account_type, $user_id]);
+  
+}/* Add this CSS to your existing style.css file */
+/* Top Rated Recipes Section Styles */
+/* Add this CSS to your existing style.css file */
+/* Top Rated Recipes Section Styles */
+.top-rated-section {
+  padding: 40px 20px;
+  text-align: center;
 }
 
-// Function to delete a user
-function deleteUser($db, $user_id) {
-    $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
-    return $stmt->execute([$user_id]);
+.top-rated-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
 }
 
+.top-rated-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+  position: relative;
+}
+
+.top-rated-card:hover {
+  transform: translateY(-5px);
+}
+
+.ranking {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #FFD700;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+}
+
+.top-rated-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+}
+
+
+.user-name {
+  margin: 0;
+  font-size: 14px;
+  color: #888;
+}
+
+.category-card {
+  position: relative;
+}
+
+.category-label {
+  position: absolute;
+  top: 10px; /* Adjust top position */
+  left: 10px; /* Adjust left position */
+  background-color: rgba(255, 255, 255, 0.8); /* Adjust background color and opacity */
+  padding: 5px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+
+.category-card:hover .category-label {
+  visibility: visible; /* Revealed on hover */
 }

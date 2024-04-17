@@ -100,34 +100,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete_comment' && isset($_GET
     <script src="script.js"></script> <!-- Add this line to include the script -->
 
     <style>
-        /* Add your custom CSS styles here */
-        /* Basic Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Typography */
-        body {
-            font-family: 'Arial', sans-serif;
-        }
-
-        /* Navigation Bar */
-        .navbar {
-            background-color: #333;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5em 1em;
-        }
-
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-        }
-
+ 
         .profile-container {
             max-width: 800px;
             margin: 20px auto;
@@ -158,52 +131,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete_comment' && isset($_GET
             padding: 2em;
         }
 
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 1em;
-            background: #333;
-            color: #fff;
-        }
-
-        /* Modal */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Position it relative to the viewport */
-            z-index: 1; /* Make sure it appears above other content */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto; /* Allow scrolling if modal content exceeds viewport height */
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto; /* Adjust margin for vertical alignment */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px; /* Limit maximum width */
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
     </style>
 </head>
+
 <body>
 <?php generateNavbar($isLoggedIn); ?>
 

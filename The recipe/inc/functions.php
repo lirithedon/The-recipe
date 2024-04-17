@@ -61,6 +61,7 @@ function calculateAverageRating($recipeId) {
 
 // Login function
 function logIn($username, $password) {
+    
     $db = connectDb();
     $stmt = $db->prepare("SELECT * FROM users WHERE username = ?");
     $stmt->execute([$username]);
@@ -123,6 +124,7 @@ function deleteComment($commentId) {
     }
 }
 
+
 function saveImage($file, $directory)
 {
     $targetDir = "uploads/" . $directory . "/";
@@ -162,6 +164,8 @@ function saveImage($file, $directory)
         return null;
     }
 }
+
+
 // Logout function
 function logOut() {
     // Ensure session is started before trying to destroy it
@@ -303,6 +307,7 @@ function editRecipe($recipeId, $title, $content, $image) {
         return false; // Failed to upload image
     }
 }
+
 function validateRecipeId($recipeId) {
     $db = connectDb();
     try {
@@ -492,6 +497,26 @@ function updateUserAccountType($db, $user_id, $new_account_type) {
     $stmt = $db->prepare("UPDATE users SET account_type = ? WHERE id = ?");
     return $stmt->execute([$new_account_type, $user_id]);
 }
+function displayStars($rating) {
+    $fullStars = intval($rating); // Get the integer part of the rating
+    $halfStar = ($rating - $fullStars) >= 0.5 ? true : false; // Check if there's a half star
+    $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0); // Calculate the number of empty stars
+    
+    // Output full stars
+    for ($i = 0; $i < $fullStars; $i++) {
+        echo '<i class="fas fa-star"></i>';
+    }
+    
+    // Output half star if present
+    if ($halfStar) {
+        echo '<i class="fas fa-star-half-alt"></i>';
+    }
+    
+    // Output empty stars
+    for ($i = 0; $i < $emptyStars; $i++) {
+        echo '<i class="far fa-star"></i>';
+    }
+}
 
 function handleFormActions() {
     if(isset($_SESSION['user_id'])) {
@@ -548,7 +573,6 @@ function handleFormActions() {
     } 
     
 }
-// functions.php
 
 // Function to delete a user
 function deleteUser($db, $user_id) {
@@ -556,7 +580,6 @@ function deleteUser($db, $user_id) {
     return $stmt->execute([$user_id]);
 }
 
-
-// Check if the user is logged in
 $isLoggedIn = isLoggedIn();
+
 ?>

@@ -13,18 +13,20 @@ $db = connectDb();
 $stmt = $db->prepare("SELECT * FROM recipes WHERE id = ?");
 $stmt->execute([$recipeId]);
 $recipe = $stmt->fetch(PDO::FETCH_ASSOC);
-
+$averageRating = calculateAverageRating($recipeId);
+$totalComments = count(getComments($recipeId));
 // Retrieve comments for the recipe from the database
 $comments = getComments($recipeId);
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $recipe['title']; ?></title>
     <link rel="stylesheet" href="inc/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Add Font Awesome for star icons -->
+    <script src="script.js"></script> <!-- Add this line to include the script -->
+
     <style>
         /* Global Styles */
         
@@ -107,7 +109,9 @@ $comments = getComments($recipeId);
         }
 
         .comment .actions {
-            text-align: right;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .comment .actions button {
@@ -123,34 +127,33 @@ $comments = getComments($recipeId);
             background-color: #d35400;
         }
 
-/* Star Rating Styles */
-.star-rating {
-    display: flex;
-    flex-direction: row-reverse; /* Reverse the direction to make it left-to-right */
-    justify-content: flex-end; /* Align items to the start of the flex container (left side) */
+        /* Star Rating Styles */
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse; /* Reverse the direction to make it left-to-right */
+            justify-content: flex-end; /* Align items to the start of the flex container (left side) */
+        }
 
-}
+        .star-rating input[type="radio"] {
+            display: none;
+        }
 
-.star-rating input[type="radio"] {
-    display: none;
-}
+        .star-rating label {
+            cursor: pointer;
+        }
 
-.star-rating label {
-    cursor: pointer;
-}
+        .star-rating i {
+            color: #ccc; /* Default star color */
+        }
 
-.star-rating i {
-    color: #ccc; /* Default star color */
-}
+        .star-rating input[type="radio"]:checked ~ label i {
+            color: #ffcc00; /* Change color for checked stars */
+        }
 
-.star-rating input[type="radio"]:checked ~ label i {
-    color: #ffcc00; /* Change color for checked stars */
-}
-
-.star-rating label i:hover,
-.star-rating label i:hover ~ i {
-    color: #ffcc00; /* Change color for hovered stars */
-}
+        .star-rating label i:hover,
+        .star-rating label i:hover ~ i {
+            color: #ffcc00; /* Change color for hovered stars */
+        }
 
     </style>
 </head>
@@ -164,57 +167,59 @@ $comments = getComments($recipeId);
                 <img src="<?php echo $recipe['image_path']; ?>" alt="<?php echo $recipe['title']; ?>">
             </div>
             <div class="recipe-details">
-    <h2><?php echo $recipe['title']; ?></h2>
-    <div class="recipe-info">
-        <p><strong>Calories:</strong> <?php echo $recipe['calories']; ?></p>
-        <p><strong>Minutes:</strong> <?php echo $recipe['minutes']; ?></p>
-        <p><strong>Uploaded by:</strong> <a href="user_profile.php?user_id=<?php echo $recipe['user_id']; ?>"><?php echo getUsernameById($recipe['user_id']); ?></a></p>
-    </div>
-    <h3>Ingredients:</h3>
-    <ul class="ingredient-list">
-        <?php
-        // Assuming ingredients are stored as a comma-separated string in the database
-        $ingredients = explode(',', $recipe['ingredients']);
-        foreach ($ingredients as $ingredient) {
-            echo '<li>' . $ingredient . '</li>';
-        }
-        ?>
-    </ul>
-    <p><?php echo $recipe['content']; ?></p>
-    <!-- Add more recipe details here if needed -->
-</div>
+                <h2><?php echo $recipe['title']; ?></h2>
+                <p><strong>Average Rating:</strong> <?php displayStars($averageRating); ?></p>
+                <p><strong>Total Reviews:</strong> <?php echo $totalComments; ?></p>
+
+                <div class="recipe-info">
+                    <p><strong>Calories:</strong> <?php echo $recipe['calories']; ?></p>
+                    <p><strong>Minutes:</strong> <?php echo $recipe['minutes']; ?></p>
+                    <p><strong>Uploaded by:</strong> <a href="user_profile.php?user_id=<?php echo $recipe['user_id']; ?>"><?php echo getUsernameById($recipe['user_id']); ?></a></p>
+                </div>
+                <h3>Ingredients:</h3>
+                <ul class="ingredient-list">
+                    <?php
+                    // Assuming ingredients are stored as a comma-separated string in the database
+                    $ingredients = explode(',', $recipe['ingredients']);
+                    foreach ($ingredients as $ingredient) {
+                        echo '<li>' . $ingredient . '</li>';
+                    }
+                    ?>
+                </ul>
+                <p><?php echo $recipe['content']; ?></p>
+                <!-- Add more recipe details here if needed -->
+            </div>
 
         </div>
 
-        <!-- Comment form and comments section -->
-        <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="comment-form">
-            <input type="hidden" name="recipe_id" value="<?php echo $recipeId; ?>">
-            <!-- Replace user_id with the actual user ID of the logged-in user -->
-            <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
-            <label for="comment">Comment:</label>
-            <textarea name="comment" id="comment" cols="30" rows="5" required></textarea>
-            <div class="star-rating">
-            <div class="star-rating">
-            <div class="star-rating">
-    <input type="radio" name="rating" id="rate-1" value="1"><label for="rate-1"><i class="fas fa-star"></i></label>
-    <input type="radio" name="rating" id="rate-2" value="2"><label for="rate-2"><i class="fas fa-star"></i></label>
-    <input type="radio" name="rating" id="rate-3" value="3"><label for="rate-3"><i class="fas fa-star"></i></label>
-    <input type="radio" name="rating" id="rate-4" value="4"><label for="rate-4"><i class="fas fa-star"></i></label>
-    <input type="radio" name="rating" id="rate-5" value="5"><label for="rate-5"><i class="fas fa-star"></i></label>
-</div>
-</div>
-
+<!-- Comment form and comments section -->
+<?php if($isLoggedIn): ?> <!-- Check if the user is logged in -->
+    <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="comment-form">
+        <input type="hidden" name="recipe_id" value="<?php echo $recipeId; ?>">
+        <!-- Replace user_id with the actual user ID of the logged-in user -->
+        <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
+        <label for="comment">Comment:</label>
+        <textarea name="comment" id="comment" cols="30" rows="5" required></textarea>
+        <div class="star-rating">
+            <input type="radio" name="rating" id="rate-1" value="1"><label for="rate-1"><i class="fas fa-star"></i></label>
+            <input type="radio" name="rating" id="rate-2" value="2"><label for="rate-2"><i class="fas fa-star"></i></label>
+            <input type="radio" name="rating" id="rate-3" value="3"><label for="rate-3"><i class="fas fa-star"></i></label>
+            <input type="radio" name="rating" id="rate-4" value="4"><label for="rate-4"><i class="fas fa-star"></i></label>
+            <input type="radio" name="rating" id="rate-5" value="5"><label for="rate-5"><i class="fas fa-star"></i></label>
         </div>
+        <button type="submit" id="submit-comment">Submit Comment</button>
+    </form>
+<?php else: ?>
+    <p>Please <a href="login.php">log in</a> to comment.</p> <!-- Display login prompt if user is not logged in -->
+<?php endif; ?>
 
-            <button type="submit" id="submit-comment">Submit Comment</button>
-        </form>
 
         <?php
         // Retrieve comments for the recipe from the database
         $comments = getComments($recipeId);
 
         // Display comments on the page
-       foreach ($comments as $comment) {
+        foreach ($comments as $comment) {
             // Display each comment with its rating, username, and date posted
             echo '<div class="comment">';
             echo '<p><strong>Rating: </strong>' . $comment['rating'] . '/5</p>';
