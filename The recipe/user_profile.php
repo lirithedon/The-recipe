@@ -17,18 +17,14 @@ if (!isset($_GET['user_id'])) {
 $user_id = $_GET['user_id'];
 
 // Fetch user's profile info
-$stmt = $db->prepare("SELECT username, profile_info FROM users WHERE id = ?");
+$stmt = $db->prepare("SELECT username, profile_info, profile_image_path FROM users WHERE id = ?");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Display user's profile info
-if ($user) {
-    $username = $user['username'];
-    $profile_info = isset($user['profile_info']) ? $user['profile_info'] : 'No bio yet!';
-} else {
-    $username = 'User Not Found'; // Display a message if user is not found
-    $profile_info = 'No bio yet!';
-}
+// Assign the username and profile image path from the fetched user data
+$username = isset($user['username']) ? $user['username'] : 'Unknown User';
+$profile_info = isset($user['profile_info']) ? $user['profile_info'] : 'No bio yet!';
+$profile_image_path = isset($user['profile_image_path']) ? $user['profile_image_path'] : 'img/blank.webp'; // Assuming you have a default profile image
 
 // Fetch user's recipes
 $stmt = $db->prepare("SELECT id, title, content, image_path, category_id, calories, minutes, ingredients FROM recipes WHERE user_id = ? ORDER BY date_posted DESC");
@@ -103,6 +99,9 @@ $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <section class="user-profile">
             <h2><?php echo "$username's Profile"; ?></h2>
             <div>
+                <?php if (!empty($profile_image_path)): ?>
+                    <img src="<?php echo htmlspecialchars($profile_image_path); ?>" alt="Profile Picture" style="max-width: 200px;">
+                <?php endif; ?>
                 <p><strong>Bio:</strong> <?php echo $profile_info; ?></p>
             </div>
         </section>

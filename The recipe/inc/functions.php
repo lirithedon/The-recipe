@@ -331,19 +331,6 @@ function editRecipe($recipeId, $title, $content, $image) {
     }
 }
 
-function validateRecipeId($recipeId) {
-    $db = connectDb();
-    try {
-        $stmt = $db->prepare("SELECT COUNT(*) FROM recipes WHERE id = ?");
-        $stmt->execute([$recipeId]);
-        $count = $stmt->fetchColumn();
-        return $count > 0; // Return true if recipe_id exists, false otherwise
-    } catch(PDOException $e) {
-        // Handle database error
-        return false;
-    }
-}
-
 function isUserComment($commentId, $userId) {
     $db = connectDb();
     try {
@@ -371,9 +358,6 @@ function getCommentById($commentId) {
 
 
 function generateNavbar($isLoggedIn) { 
-    echo "isLoggedIn: " . ($isLoggedIn ? "true" : "false") . "<br>";
-    echo "account_type: " . getAccountType() . "<br>";
-
     ?>
     
     <!-- Navbar -->
@@ -596,8 +580,37 @@ function handleFormActions() {
     } 
     
 }
+// Connect to the database and assign the PDO object to $db
+$db = connectDb();
 
+// Fetch the $user_id from the session if available
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+} else {
+    // Handle the case when the user is not logged in
+}
 
+// Check if $db is available and $user_id is defined
+if (isset($db) && isset($user_id)) {
+    // Fetch profile information including the profile image path from the database
+    $stmt = $db->prepare("SELECT profile_info, profile_image_path FROM users WHERE id = ?");
+    $stmt->execute([$user_id]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Assign fetched profile information to variables
+    $profile_info = isset($user['profile_info']) ? $user['profile_info'] : 'No bio yet!';
+    $profileImagePath = isset($user['profile_image_path']) ? $user['profile_image_path'] : '';
+
+    // If profile image path is empty, use the default image path
+    if (empty($profileImagePath)) {
+        $profileImagePath = "img/blank.webp";
+    }
+
+    // Construct the URL for the profile image
+    $profileImageUrl = $profileImagePath;
+} else {
+    // Handle the case when $db or $user_id is not available
+}
 
 // Function to delete a user
 function deleteUser($db, $user_id) {
@@ -607,4 +620,58 @@ function deleteUser($db, $user_id) {
 
 $isLoggedIn = isLoggedIn();
 
+
+// Function to update user's bio
+function updateBio($newBio, $userId, $db) {
+    $stmt = $db->prepare("UPDATE users SET profile_info = ? WHERE id = ?");
+    if ($stmt->execute([$newBio, $userId])) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Function to update user's profile picture
+function updateProfilePicture($tempName, $fileName, $userId, $db) {
+    $destination = 'uploads/' . uniqid('', true) . '-' . $fileName;
+
+    // Move uploaded file to destination
+    if (move_uploaded_file($tempName, $destination)) {
+        $stmt = $db->prepare("UPDATE users SET profile_image_path = ? WHERE id = ?");
+        if ($stmt->execute([$destination, $userId])) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Check if updating bio
+    if (isset($_POST['profile_info'])) {
+        $newBio = filter_var($_POST['profile_info']);
+        $userId = $_SESSION['user_id'];
+        
+        if (updateBio($newBio, $userId, $db)) {
+            echo "<script>alert('Bio updated successfully.');</script>";
+        } else {
+            echo "<script>alert('Error updating bio.');</script>";
+        }
+    }
+
+    // Check if updating profile picture
+    if (isset($_FILES['profileImage']) && $_FILES['profileImage']['error'] === UPLOAD_ERR_OK) {
+        $tempName = $_FILES['profileImage']['tmp_name'];
+        $fileName = $_FILES['profileImage']['name'];
+        $userId = $_SESSION['user_id'];
+
+        if (updateProfilePicture($tempName, $fileName, $userId, $db)) {
+            echo "<script>alert('Profile picture uploaded successfully.');</script>";
+        } else {
+            echo "<script>alert('Error uploading profile picture.');</script>";
+        }
+    }
+}
 ?>
