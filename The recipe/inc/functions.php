@@ -45,6 +45,18 @@ function signUp($username, $email, $password) {
         return false; // Sign-up failed
     }
 }
+function validateRecipeId($recipeId) {
+    $db = connectDb();
+    try {
+        $stmt = $db->prepare("SELECT COUNT(*) FROM recipes WHERE id = ?");
+        $stmt->execute([$recipeId]);
+        $count = $stmt->fetchColumn();
+        return $count > 0; // Return true if recipe_id exists, false otherwise
+    } catch(PDOException $e) {
+        // Handle database error
+        return false;
+    }
+}
 
 // Function to fetch recipes from the database
 function fetchRecipes() {
@@ -191,13 +203,8 @@ function saveImage($file, $directory)
 
 // Logout function
 function logOut() {
-    // Ensure session is started before trying to destroy it
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
     session_unset();
     session_destroy();
-    // Optionally redirect to homepage or login page here, or handle redirection in the caller script
 }
 
 // Function to check if the user is logged in
@@ -362,7 +369,7 @@ function generateNavbar($isLoggedIn) {
     
     <!-- Navbar -->
     <nav class="navbar">
-        <div id="logo"><a href="index.php">The Recipe</a></div>
+    <div id="logo"><a href="index.php"><img src="img/therecipe.png" alt="The Recipe Logo" style="height: 50px;"></a></div>
         <div id="nav-links">
             <?php if ($isLoggedIn): ?>
                 <?php if (getAccountType() === 'admin'): ?>

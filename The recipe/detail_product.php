@@ -126,7 +126,7 @@ $comments = getComments($recipeId);
             <button type="submit" id="submit-comment">Submit Comment</button>
         </form>
     <?php else: ?>
-        <p>Please <a href="login.php">log in</a> to comment.</p> <!-- Display login prompt if user is not logged in -->
+        <a href="#" onclick="document.getElementById('loginModal').style.display='block'">Login to comment</a>
     <?php endif; ?>
 
 

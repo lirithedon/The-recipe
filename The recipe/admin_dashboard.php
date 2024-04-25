@@ -89,119 +89,102 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete_comment' && isset($_GET
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Page</title>
+    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="inc/style.css">
-    <script src="script.js"></script> <!-- Add this line to include the script -->
+    <script src="script.js"></script>
 
     <style>
- 
-        .profile-container {
-            max-width: 800px;
-            margin: 20px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        /* Main Content */
-        main {
-            padding: 2em;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
         }
 
     </style>
+    <?php generateNavbar($isLoggedIn); ?>
+
 </head>
-
 <body>
-<?php generateNavbar($isLoggedIn); ?>
-
-
 <main class="admin-container">
-    <h2>All Recipes</h2>
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Content</th>
-            <th>Action</th>
-        </tr>
-        <?php foreach ($recipes as $recipe): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($recipe['title']); ?></td>
-                <td><?php echo htmlspecialchars($recipe['content']); ?></td>
-                <td><a href="admin_dashboard.php?action=delete&recipe_id=<?php echo $recipe['id']; ?>">Delete</a></td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
+<h1>Admin dashboard</h1>
 
-    <h2>All Comments</h2>
-    <table>
-        <tr>
-            <th>Comment</th>
-            <th>Date Posted</th>
-            <th>Action</th>
-        </tr>
-        <?php foreach ($comments as $comment): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($comment['comment']); ?></td>
-                <td><?php echo htmlspecialchars($comment['date_posted']); ?></td>
-                <td><a href="admin_dashboard.php?action=delete_comment&comment_id=<?php echo $comment['id']; ?>">Delete</a></td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
-</main>
-<main class="admin-container">
-    <h2>All Users</h2>
-    <table>
-        <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Account Type</th>
-            <th>Action</th>
-        </tr>
-        <?php foreach ($users as $user): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($user['username']); ?></td>
-                <td><?php echo htmlspecialchars($user['email']); ?></td>
-                <td><?php echo htmlspecialchars($user['account_type']); ?></td>
-                <td>
-                    <?php if ($user['id'] != $_SESSION['user_id']): ?>
-                        <select onchange="updateAccountType(<?php echo $user['id']; ?>, this.value)">
-                            <option value="admin" <?php if ($user['account_type'] === 'admin') echo 'selected'; ?>>Admin</option>
-                            <option value="user" <?php if ($user['account_type'] === 'user') echo 'selected'; ?>>User</option>
-                        </select>
-                        <a href="admin_dashboard.php?action=delete_user&user_id=<?php echo $user['id']; ?>" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
-                    <?php endif; ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
+    <div class="table-wrapper">
+        <div class="scrollable-table">
+            <h3>All Recipes</h3>
+            <table>
+                <tr>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Action</th>
+                </tr>
+                <?php foreach ($recipes as $recipe): ?>
+                    <tr>
+                        <td><?php echo ($recipe['title']); ?></td>
+                        <td><?php echo ($recipe['content']); ?></td>
+                        <td><a href="admin_dashboard.php?action=delete&recipe_id=<?php echo $recipe['id']; ?>">Delete</a></td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+        </div>
+
+        <div class="scrollable-table">
+            <h3>All Comments</h3>
+            <table>
+                <tr>
+                    <th>Comment</th>
+                    <th>Date Posted</th>
+                    <th>Action</th>
+                </tr>
+                <?php foreach ($comments as $comment): ?>
+                    <tr>              
+                        <td><?php echo ($comment['comment']); ?></td>
+                        <td><?php echo ($comment['date_posted']); ?></td>
+                        <td><a href="admin_dashboard.php?action=delete_comment&comment_id=<?php echo $comment['id']; ?>">Delete</a></td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+        </div>
+
+        <div class="scrollable-table">
+            <h3>All Users</h3>
+            <table>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Account Type</th>
+                    <th>Action</th>
+                </tr>
+                <?php foreach ($users as $user): ?>
+                    <tr>
+                        <td><?php echo ($user['username']); ?></td>
+                        <td><?php echo ($user['email']); ?></td>
+                        <td><?php echo ($user['account_type']); ?></td>
+                        <td>
+                            <?php if ($user['id'] != $_SESSION['user_id']): ?>
+                                <select onchange="updateAccountType(<?php echo $user['id']; ?>, this.value)">
+                                    <option value="admin" <?php if ($user['account_type'] === 'admin') echo 'selected'; ?>>Admin</option>
+                                    <option value="user" <?php if ($user['account_type'] === 'user') echo 'selected'; ?>>User</option>
+                                </select>
+                                <a href="admin_dashboard.php?action=delete_user&user_id=<?php echo $user['id']; ?>" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+        </div>
+    </div>
 </main>
 
 <footer>
     <p>&copy; 2024 The Recipe Community</p>
 </footer>
+
 <script>
     // JavaScript function to update user's account type
     function updateAccountType(userId, newAccountType) {

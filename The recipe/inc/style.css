@@ -11,7 +11,10 @@
   overflow: hidden;
   border-radius: 50%; /* Makes the container a circle */
 }
-
+.profile-info{
+  display: flex;
+  justify-content: center;
+}
 .profile-image {
   width: 100%; /* Ensures the image fills the container */
   height: auto;
@@ -32,7 +35,7 @@
   background-image: url(../img/food.jpeg);
   background-size: auto;
   background-position: center;
-  height: 25vh;
+  height: 35vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -44,16 +47,13 @@
             padding: 20px; /* Add some padding to the text */
                 background: white;
                 opacity: 88%;
+                margin-top: 50px;
         }
-      
-/* Navigation Bar */
-header nav {
+  
+
+#nav-links {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 1em;
-  background: #333;
-  color: #fff;
 }
 
 #nav-links a {
@@ -95,6 +95,9 @@ body {
   display: flex;
   justify-content: space-between;
   padding: 20px;
+  position: fixed;
+    width: 100%;
+    z-index: 4;
 }
 
 .navbar a {
@@ -103,19 +106,7 @@ body {
   margin-left: 20px;
 }
 
-.profile-container {
-  max-width: 800px;
-  margin: 20px auto;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 
-.recipe-form form,
-.user-recipes div {
-  margin-bottom: 20px;
-}
 
 input[type="text"],
 textarea {
@@ -138,35 +129,8 @@ button:hover {
   background-color: #4cae4c;
 }
 
-.user-recipes div {
-  background: #fafafa;
-  padding: 10px;
-  border-radius: 5px;
-  border-left: 5px solid #5cb85c;
-}
-.user-recipes .recipe {
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-}
 
-.user-recipes .recipe h3 {
-  margin-top: 0;
-}
 
-.user-recipes .recipe p {
-  white-space: pre-wrap; /* Respect whitespace and newlines */
-}
-/* Add these styles to your existing CSS file */
-
-/* Welcome Section */
-.welcome-section {
-  background-color: #f9f9f9;
-  padding: 40px;
-  text-align: center;
-}
 
 .welcome-text h1 {
   font-size: 36px;
@@ -182,19 +146,6 @@ button:hover {
 /* Just for You Section */
 .just-for-you-section {
   padding: 40px;
-}
-
-.recipe-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-gap: 20px;
-}
-
-.recipe-card {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
 }
 
 .recipe-card img {
@@ -431,6 +382,42 @@ button:hover {
   border: 1px solid #ccc;
 }
 
+
+body {
+  font-family: Georgia, serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f4f4;
+  /* Add padding-top equal to the height of the navbar */
+  padding-top: 60px; /* Adjust as needed */
+}
+
+.navbar {
+  background-color: #333;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+  top: 0; /* Ensure navbar sticks to the top */
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+}
+
+/* Adjust the top margin of the content to create space below the navbar */
+.content {
+  margin-top: 60px; /* Same as the padding-top value of body */
+}
+
+/* Other styles remain the same */
+
+
 .comment-form select {
   width: 100%;
   padding: 10px;
@@ -461,6 +448,7 @@ button:hover {
 
 .comment p {
   margin-bottom: 10px;
+  font-size: 18px;
 }
 
 .action-buttons button {
@@ -597,7 +585,7 @@ button:hover {
 
 .user-profile p {
   margin-bottom: 20px;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.6;
 }
 
@@ -716,6 +704,14 @@ button:hover {
   justify-content: center;
   align-items: center;
   font-size: 20px;
+}
+.admin-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 100px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .top-rated-card img {

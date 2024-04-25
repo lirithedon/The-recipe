@@ -113,16 +113,21 @@ function submitSignUp() {
 function toggleCategory(categoryId) {
     let currentUrl = window.location.href;
     let categoryParam = 'category=' + categoryId;
-    
+
     // Check if category is already in URL
     if (currentUrl.includes(categoryParam)) {
         // Remove category from URL
         currentUrl = currentUrl.replace(categoryParam, '');
         // If there's no other category, remove the '?' as well
-        if (!currentUrl.includes('category=')) {
+        if (!currentUrl.includes('category=') && currentUrl.includes('?')) {
             currentUrl = currentUrl.replace('?', ''); // Remove the '?' from the URL
         }
     } else {
+        // Check if any category is already in URL
+        if (currentUrl.includes('category=')) {
+            // Remove existing category parameter
+            currentUrl = currentUrl.replace(/(\?|&)category=\d*/g, '');
+        }
         // Add category to URL
         if (currentUrl.includes('?')) {
             currentUrl += '&' + categoryParam;
@@ -130,7 +135,8 @@ function toggleCategory(categoryId) {
             currentUrl += '?' + categoryParam;
         }
     }
-    
+
     // Reload page with updated URL
     window.location.href = currentUrl;
 }
+

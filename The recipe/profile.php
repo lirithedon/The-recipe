@@ -256,14 +256,14 @@ $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h2>Your Recipes</h2>
         <?php foreach ($recipes as $recipe): ?>
             <div class="recipe">
-                <h3><?php echo htmlspecialchars($recipe['title']); ?></h3>
-                <p><?php echo nl2br(htmlspecialchars($recipe['content'])); ?></p>
+                <h3><?php echo ($recipe['title']); ?></h3>
+                <p><?php echo nl2br(($recipe['content'])); ?></p>
                 <?php if (!empty($recipe['image_path'])): ?>
                     <img src="<?php echo htmlspecialchars($recipe['image_path']); ?>" alt="Recipe Image" style="max-width: 100%; height: auto;">
-                    <p><strong>Calories:</strong> <?php echo htmlspecialchars($recipe['calories']); ?></p>
-                    <p><strong>Minutes:</strong> <?php echo htmlspecialchars($recipe['minutes']); ?></p>
+                    <p><strong>Calories:</strong> <?php echo ($recipe['calories']); ?></p>
+                    <p><strong>Minutes:</strong> <?php echo ($recipe['minutes']); ?></p>
                     <p><strong>Category:</strong> <?php echo getCategoryName($recipe['category_id']); ?></p>
-                    <p><strong>Ingredients:</strong><br><?php echo nl2br(htmlspecialchars($recipe['ingredients'])); ?></p>
+                    <p><strong>Ingredients:</strong><br><?php echo nl2br(($recipe['ingredients'])); ?></p>
                 <?php endif; ?>
                 <!-- Edit Recipe Form -->
                 <form action="profile.php" method="POST" enctype="multipart/form-data">
