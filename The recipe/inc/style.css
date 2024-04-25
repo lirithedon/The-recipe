@@ -709,7 +709,7 @@ body {
   max-width: 1200px;
   margin: 20px auto;
   background-color: #fff;
-  padding: 100px;
+  padding: 40px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -745,4 +745,31 @@ body {
 
 .category-card:hover .category-label {
   visibility: visible; /* Revealed on hover */
+}
+/* Default grid layout for larger screens */
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 columns for larger screens */
+  grid-gap: 20px;
+}
+
+/* Adjust grid layout for medium screens */
+@media (max-width: 1024px) {
+  .recipe-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns for medium screens */
+  }
+}
+
+/* Adjust grid layout for small screens */
+@media (max-width: 768px) {
+  .recipe-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for small screens */
+  }
+}
+
+/* Optionally, for very small screens, keep it more spacious with fewer columns */
+@media (max-width: 480px) {
+  .recipe-grid {
+    grid-template-columns: 1fr; /* 1 column for very small screens if desired */
+  }
 }

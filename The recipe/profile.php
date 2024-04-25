@@ -12,6 +12,7 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: index.php');
     exit;
 }
+
 $profile_info = isset($user['profile_info']) ? $user['profile_info'] : 'No bio yet!';
 
 $user_id = $_SESSION['user_id'];
@@ -20,12 +21,12 @@ $user_id = $_SESSION['user_id'];
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'edit_recipe' && isset($_POST['recipe_id'])) {
     // Retrieve the edited recipe data
     $recipe_id = $_POST['recipe_id'];
-    $title = filter_var($_POST['title'], FILTER_SANITIZE_STRING);
-    $content = filter_var($_POST['content'], FILTER_SANITIZE_STRING);
+    $title = filter_var($_POST['title']);
+    $content = filter_var($_POST['content']);
     $category_id = $_POST['category'];
     $calories = intval($_POST['calories']);
     $minutes = intval($_POST['minutes']);
-    $ingredients = filter_var($_POST['ingredients'], FILTER_SANITIZE_STRING);
+    $ingredients = filter_var($_POST['ingredients']);
 
     // Check if image is uploaded
     $imagePath = '';
@@ -62,12 +63,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
 
 // Handle recipe creation with image upload
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['title'], $_POST['content'], $_POST['category'], $_FILES['recipeImage'], $_POST['calories'], $_POST['minutes'], $_POST['ingredients'])) {
-    $title = filter_var($_POST['title'], FILTER_SANITIZE_STRING);
-    $content = filter_var($_POST['content'], FILTER_SANITIZE_STRING);
+    $title = filter_var($_POST['title']);
+    $content = filter_var($_POST['content']);
     $category_id = $_POST['category']; // Retrieve selected category
     $calories = intval($_POST['calories']); // Convert to integer
     $minutes = intval($_POST['minutes']); // Convert to integer
-    $ingredients = filter_var($_POST['ingredients'], FILTER_SANITIZE_STRING);
+    $ingredients = filter_var($_POST['ingredients']);
 
     $imagePath = ''; // Initialize image path variable
 
@@ -128,6 +129,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['profileImage']) && $_
     } else {
         echo "<script>alert('Error uploading file.');</script>";
     }
+
+    // After processing the upload, redirect to avoid resubmission
+    header("Location: profile.php");
+    exit();
 }
 
 // Handle recipe deletion

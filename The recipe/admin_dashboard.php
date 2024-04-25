@@ -18,23 +18,27 @@ $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $stmt = $db->query("SELECT id, recipe_id, comment, date_posted FROM ratings ORDER BY date_posted DESC");
 $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Handle recipe deletion
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['recipe_id'])) {
     $recipe_id = $_GET['recipe_id'];
 
-    $stmt = $db->prepare("DELETE FROM recipes WHERE id = ?");
-    if ($stmt->execute([$recipe_id])) {
-        echo "<script>alert('Recipe deleted successfully.');</script>";
-    } else {
-        echo "<script>alert('Error deleting recipe.');</script>";
+    try {
+        $stmt = $db->prepare("DELETE FROM recipes WHERE id = ?");
+        if ($stmt->execute([$recipe_id])) {
+            // Recipe deleted successfully
+            echo "<script>alert('Recipe deleted successfully.');</script>";
+        } else {
+            // Error deleting recipe
+            echo "<script>alert('Error deleting recipe.');</script>";
+        }
+    } catch (PDOException $e) {
+        // Output any database error message for debugging
+        echo "Error: " . $e->getMessage();
     }
     // Redirect to refresh and prevent resubmission
-    header("Location: admin.php");
+    header("Location: admin_dashboard.php");
     exit;
 }
-// admin_dashboard.php
 
-// Other code remains the same...
 
 // Handle user deletion
 if (isset($_GET['action']) && $_GET['action'] == 'delete_user' && isset($_GET['user_id'])) {
@@ -99,12 +103,39 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete_comment' && isset($_GET
     <script src="script.js"></script>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f8f8;
-        }
+   
+
+h1, h2, h3 {
+    color: #333;
+}
+
+a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f8f8f8;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
 
     </style>
     <?php generateNavbar($isLoggedIn); ?>
