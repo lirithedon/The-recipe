@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-
+// Database connection
 function connectDb() {
     $host = 'localhost';
     $dbname = 'the_recipe';
@@ -13,6 +13,7 @@ function connectDb() {
         exit("Error: " . $e->getMessage());
     }
 }
+// Function to retrieve the account type of the logged-in user
 function getAccountType() {
     if (isset($_SESSION['user_id'])) {
         $db = connectDb();
@@ -22,7 +23,6 @@ function getAccountType() {
     }
     return 'regular';
 }
-
 function signUp($username, $email, $password) {
     $db = connectDb();
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -48,7 +48,6 @@ function calculateAverageRating($recipeId) {
     $stmt->execute([$recipeId]);
     return round($stmt->fetchColumn() ?? 0, 1);
 }
-
 function getRecipesByCategory($categoryId, $limit) {
     $db = connectDb();
     $stmt = $db->prepare("SELECT * FROM recipes WHERE category_id = ? LIMIT ?");
@@ -87,6 +86,7 @@ function deleteComment($commentId) {
     return ['error' => 'Failed to delete comment'];
 }
 
+
 function saveImage($file, $directory) {
     $targetDir = "uploads/" . $directory . "/";
     if (!file_exists($targetDir)) {
@@ -101,15 +101,20 @@ function saveImage($file, $directory) {
     return null;
 }
 
+
+
+// Logout function
 function logOut() {
     session_unset();
     session_destroy();
 }
 
+// Function to check if the user is logged in
 function isLoggedIn() {
     return isset($_SESSION['user_id']);
 }
 
+// Function to retrieve comments for a recipe from the database
 function getComments($recipeId) {
     $db = connectDb();
     $stmt = $db->prepare("SELECT * FROM ratings WHERE recipe_id = ?");
@@ -124,12 +129,36 @@ function getUserById($userId) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+// Function to submit comment with rating
 function submitComment($recipeId, $userId, $rating, $comment) {
-    $db = connectDb();
-    $stmt = $db->prepare("INSERT INTO ratings (recipe_id, user_id, rating, comment) VALUES (?, ?, ?, ?)");
-    return $stmt->execute([$recipeId, $userId, $rating, $comment]);
+    $db = connectDb(); // Connect to the database (assuming connectDb() is your database connection function)
+    if (!$db) {
+        return ['error' => 'Failed to connect to the database'];
+    }
+
+    try {
+        // Prepare SQL statement to insert comment into ratings table
+        $stmt = $db->prepare("INSERT INTO ratings (recipe_id, user_id, rating, comment) VALUES (?, ?, ?, ?)");
+        // Bind parameters
+        $stmt->bindParam(1, $recipeId, PDO::PARAM_INT);
+        $stmt->bindParam(2, $userId, PDO::PARAM_INT);
+        $stmt->bindParam(3, $rating, PDO::PARAM_INT);
+        $stmt->bindParam(4, $comment, PDO::PARAM_STR);
+        // Execute the statement
+        if ($stmt->execute()) {
+            // Return success message
+            return ['success' => 'Comment submitted successfully'];
+        } else {
+            // Return error message
+            return ['error' => 'Failed to insert comment'];
+        }
+    } catch(PDOException $e) {
+        // Handle database error
+        return ['error' => $e->getMessage()];
+    }
 }
 
+// Function to create a new recipe
 function createRecipe($title, $content, $image, $userId) {
     $db = connectDb();
     $uploadDir = 'uploads/';
@@ -142,13 +171,14 @@ function createRecipe($title, $content, $image, $userId) {
     return false;
 }
 
+// Function to get a user's username by their ID
 function getUsernameById($user_id) {
     $db = connectDb();
     $stmt = $db->prepare("SELECT username FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     return $stmt->fetch(PDO::FETCH_ASSOC)['username'];
 }
-
+// Function to edit an existing recipe
 function editRecipe($recipeId, $title, $content, $image) {
     $db = connectDb();
     $uploadDir = 'uploads/';
@@ -161,20 +191,20 @@ function editRecipe($recipeId, $title, $content, $image) {
     return false;
 }
 
+
 function isUserComment($commentId, $userId) {
     $db = connectDb();
     $stmt = $db->prepare("SELECT COUNT(*) FROM ratings WHERE id = ? AND user_id = ?");
     $stmt->execute([$commentId, $userId]);
     return $stmt->fetchColumn() > 0;
 }
-
+// Function to retrieve a comment by its ID
 function getCommentById($commentId) {
     $db = connectDb();
     $stmt = $db->prepare("SELECT * FROM ratings WHERE id = ?");
     $stmt->execute([$commentId]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
-
 
 function generateNavbar($isLoggedIn) { 
     ?>
@@ -266,19 +296,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['username'], $_POST['em
 
 
 
+// Function to update a comment in the database
 function updateComment($commentId, $newComment) {
     $db = connectDb();
     $stmt = $db->prepare("UPDATE ratings SET comment = ? WHERE id = ?");
     return $stmt->execute([$newComment, $commentId]);
 }
-
 function getTopRatedRecipes() {
     $db = connectDb();
     $stmt = $db->prepare("SELECT recipes.*, AVG(ratings.rating) AS avg_rating FROM recipes LEFT JOIN ratings ON recipes.id = ratings.recipe_id GROUP BY recipes.id ORDER BY avg_rating DESC LIMIT 5");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-
+// Define the getCategoryName() function to retrieve the category name based on its ID
 function getCategoryName($category_id) {
     switch ($category_id) {
         case 1: return 'Meat';
@@ -294,56 +324,124 @@ function updateUserAccountType($db, $user_id, $new_account_type) {
     $stmt = $db->prepare("UPDATE users SET account_type = ? WHERE id = ?");
     return $stmt->execute([$new_account_type, $user_id]);
 }
-
 function displayStars($rating) {
-    $fullStars = intval($rating);
-    $halfStar = ($rating - $fullStars) >= 0.5;
-    $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
-    for ($i = 0; $i < $fullStars; $i++) echo '<i class="fas fa-star"></i>';
-    if ($halfStar) echo '<i class="fas fa-star-half-alt"></i>';
-    for ($i = 0; $i < $emptyStars; $i++) echo '<i class="far fa-star"></i>';
+    $fullStars = intval($rating); // Get the integer part of the rating
+    $halfStar = ($rating - $fullStars) >= 0.5 ? true : false; // Check if there's a half star
+    $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0); // Calculate the number of empty stars
+    
+    // Output full stars
+    for ($i = 0; $i < $fullStars; $i++) {
+        echo '<i class="fas fa-star"></i>';
+    }
+    
+    // Output half star if present
+    if ($halfStar) {
+        echo '<i class="fas fa-star-half-alt"></i>';
+    }
+    
+    // Output empty stars
+    for ($i = 0; $i < $emptyStars; $i++) {
+        echo '<i class="far fa-star"></i>';
+    }
 }
 
 function handleFormActions() {
-    if (isset($_SESSION['user_id']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
-        if (isset($_POST['delete_comment'])) {
-            deleteOrUpdateComment('delete', $_POST['comment_id'], $_SESSION['user_id'], $_POST['recipe_id']);
-        } elseif (isset($_POST['edit_comment'])) {
-            deleteOrUpdateComment('update', $_POST['edit_comment_id'], $_SESSION['user_id'], $_POST['recipe_id'], $_POST['new_comment']);
-        } else {
-            submitComment($_POST['recipe_id'], $_SESSION['user_id'], $_POST['rating'], $_POST['comment']);
+    if(isset($_SESSION['user_id'])) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (isset($_POST['delete_comment'])) {
+                $commentId = $_POST['comment_id'];
+                $recipeId = $_POST['recipe_id'];
+                $userId = $_SESSION['user_id'];
+                if (isUserCommentInRecipe($commentId, $userId, $recipeId)) {
+                    $deleteResult = deleteComment($commentId);
+                    if ($deleteResult['success']) {
+                        header("Location: {$_SERVER['PHP_SELF']}?recipe_id=$recipeId");
+                        exit();
+                    } else {
+                        echo "Error: Failed to delete comment";
+                    }
+                } else {
+                    echo "Error: You are not authorized to delete this comment.";
+                }
+            } elseif (isset($_POST['edit_comment'])) {
+                $commentId = $_POST['edit_comment_id'];
+                $newComment = $_POST['new_comment'];
+                if (isUserComment($commentId, $_SESSION['user_id'])) {
+                    $updateResult = updateComment($commentId, $newComment);
+                    if ($updateResult) {
+                        header("Location: {$_SERVER['PHP_SELF']}?recipe_id={$_POST['recipe_id']}");
+                        exit();
+                    } else {
+                        echo "Error: Failed to update comment";
+                    }
+                } else {
+                    echo "Error: You are not authorized to edit this comment.";
+                }
+            } else {
+                $recipeId = $_POST['recipe_id'];
+                $userId = $_SESSION['user_id'];
+                $rating = $_POST['rating'];
+                $comment = $_POST['comment'];
+                if (!validateRecipeId($recipeId)) {
+                    $errorMessage = 'Invalid recipe ID';
+                    echo "Error: $errorMessage";
+                } else {
+                    $result = submitComment($recipeId, $userId, $rating, $comment);
+                    if (isset($result['success'])) {
+                        header("Location: {$_SERVER['PHP_SELF']}?recipe_id=$recipeId");
+                        exit();
+                    } else {
+                        $errorMessage = $result['error'];
+                        echo "Error: $errorMessage";
+                    }
+                }
+            }
         }
+    } 
+    
+}
+// Connect to the database and assign the PDO object to $db
+$db = connectDb();
+
+// Fetch the $user_id from the session if available
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+} else {
+    // Handle the case when the user is not logged in
+}
+
+// Check if $db is available and $user_id is defined
+if (isset($db) && isset($user_id)) {
+    // Fetch profile information including the profile image path from the database
+    $stmt = $db->prepare("SELECT profile_info, profile_image_path FROM users WHERE id = ?");
+    $stmt->execute([$user_id]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Assign fetched profile information to variables
+    $profile_info = isset($user['profile_info']) ? $user['profile_info'] : 'No bio yet!';
+    $profileImagePath = isset($user['profile_image_path']) ? $user['profile_image_path'] : '';
+
+    // If profile image path is empty, use the default image path
+    if (empty($profileImagePath)) {
+        $profileImagePath = "img/blank.webp";
     }
+
+    // Construct the URL for the profile image
+    $profileImageUrl = $profileImagePath;
+} else {
+    // Handle the case when $db or $user_id is not available
 }
 
-function deleteOrUpdateComment($action, $commentId, $userId, $recipeId, $newComment = null) {
-    if (isUserCommentInRecipe($commentId, $userId, $recipeId)) {
-        if ($action === 'delete') {
-            $deleteResult = deleteComment($commentId);
-        } else {
-            $deleteResult = updateComment($commentId, $newComment);
-        }
-        if ($deleteResult) {
-            header("Location: {$_SERVER['PHP_SELF']}?recipe_id=$recipeId");
-            exit();
-        } else {
-            echo "Error: Failed to modify comment";
-        }
-    } else {
-        echo "Error: You are not authorized to modify this comment.";
-    }
+// Function to delete a user
+function deleteUser($db, $user_id) {
+    $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
+    return $stmt->execute([$user_id]);
 }
 
+$isLoggedIn = isLoggedIn();
 
 
-function insertComment($recipeId, $userId, $rating, $comment) {
-    $db = connectDb();
-    $stmt = $db->prepare("INSERT INTO ratings (recipe_id, user_id, rating, comment) VALUES (?, ?, ?, ?)");
-    return $stmt->execute([$recipeId, $userId, $rating, $comment]);
-}
-
-
-
+// Function to update user's bio
 function updateBio($newBio, $userId) {
     $db = connectDb();
     $stmt = $db->prepare("UPDATE users SET profile_info = ? WHERE id = ?");
@@ -376,13 +474,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
-
-// Function to delete a user from the database
-function deleteUser($db, $user_id) {
-    $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
-    return $stmt->execute([$user_id]);
-}
-
-$isLoggedIn = isLoggedIn();
-
 ?>

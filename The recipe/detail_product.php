@@ -117,11 +117,11 @@ $comments = getComments($recipeId);
             <label for="comment">Comment:</label>
             <textarea name="comment" id="comment" cols="30" rows="5" required></textarea>
             <div class="star-rating">
-                <input type="radio" name="rating" id="rate-1" value="1"><label for="rate-1"><i class="fas fa-star"></i></label>
-                <input type="radio" name="rating" id="rate-2" value="2"><label for="rate-2"><i class="fas fa-star"></i></label>
-                <input type="radio" name="rating" id="rate-3" value="3"><label for="rate-3"><i class="fas fa-star"></i></label>
-                <input type="radio" name="rating" id="rate-4" value="4"><label for="rate-4"><i class="fas fa-star"></i></label>
-                <input type="radio" name="rating" id="rate-5" value="5"><label for="rate-5"><i class="fas fa-star"></i></label>
+            <input type="radio" name="rating" id="rate-5" value="5"><label for="rate-5"><i class="fas fa-star"></i></label>
+            <input type="radio" name="rating" id="rate-4" value="4"><label for="rate-4"><i class="fas fa-star"></i></label>
+            <input type="radio" name="rating" id="rate-3" value="3"><label for="rate-3"><i class="fas fa-star"></i></label>
+            <input type="radio" name="rating" id="rate-2" value="2"><label for="rate-2"><i class="fas fa-star"></i></label>
+            <input type="radio" name="rating" id="rate-1" value="1"><label for="rate-1"><i class="fas fa-star"></i></label>
             </div>
             <button type="submit" id="submit-comment">Submit Comment</button>
         </form>
