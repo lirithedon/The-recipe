@@ -39,58 +39,6 @@ $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo "$username's Profile"; ?></title>
     <link rel="stylesheet" href="inc/style.css">
-    <style>
-        /* Add your custom CSS styles here */
-        /* Improved CSS for profile page */
-        .slideshow {
-            position: relative;
-            max-width: 800px;
-            margin: auto;
-            overflow: hidden;
-        }
-
-        .recipe {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .prev, .next {
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: auto;
-            padding: 16px;
-            margin-top: -22px;
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
-            transition: 0.6s ease;
-            border-radius: 0 3px 3px 0;
-            user-select: none;
-        }
-
-        .next {
-            right: 0;
-            border-radius: 3px 0 0 3px;
-        }
-
-        .prev:hover, .next:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-
-        /* Slideshow animation */
-        .fade {
-            animation-name: fade;
-            animation-duration: 1.5s;
-        }
-
-        @keyframes fade {
-            from {opacity: .4}
-            to {opacity: 1}
-        }
-    </style>
 </head>
 <body>
     <?php generateNavbar(isset($_SESSION['user_id'])); ?>

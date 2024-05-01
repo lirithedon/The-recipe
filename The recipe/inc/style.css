@@ -30,7 +30,6 @@
   object-position: center; /* Center the image within the container */
 }
 
-
 .welcome-section {
   background-image: url(../img/food.jpeg);
   background-size: auto;
@@ -48,7 +47,8 @@
                 background: white;
                 opacity: 88%;
                 margin-top: 50px;
-        }
+
+              }
   
 
 #nav-links {
@@ -88,25 +88,6 @@ body {
   padding: 0;
   background: #f4f4f4;
 }
-
-.navbar {
-  background-color: #333;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  position: fixed;
-    width: 100%;
-    z-index: 4;
-}
-
-.navbar a {
-  color: white;
-  text-decoration: none;
-  margin-left: 20px;
-}
-
-
 
 input[type="text"],
 textarea {
@@ -402,6 +383,7 @@ body {
   width: 100%;
   z-index: 1;
   top: 0; /* Ensure navbar sticks to the top */
+
 }
 
 .navbar a {
@@ -414,9 +396,6 @@ body {
 .content {
   margin-top: 60px; /* Same as the padding-top value of body */
 }
-
-/* Other styles remain the same */
-
 
 .comment-form select {
   width: 100%;
@@ -565,7 +544,7 @@ body {
 
 
 .profile-container {
-  max-width: 800px;
+  max-width: 1500px;
   margin: 20px auto;
   background: #fff;
   border-radius: 8px;
@@ -664,9 +643,7 @@ body {
   }
   
 }/* Add this CSS to your existing style.css file */
-/* Top Rated Recipes Section Styles */
-/* Add this CSS to your existing style.css file */
-/* Top Rated Recipes Section Styles */
+
 .top-rated-section {
   padding: 40px 20px;
   text-align: center;
@@ -696,7 +673,7 @@ body {
   top: 10px;
   left: 10px;
   background-color: #FFD700;
-  color: #fff;
+  color: black;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -706,7 +683,7 @@ body {
   font-size: 20px;
 }
 .admin-container {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 20px auto;
   background-color: #fff;
   padding: 40px;
@@ -720,7 +697,6 @@ body {
   object-fit: cover;
   border-radius: 8px 8px 0 0;
 }
-
 
 .user-name {
   margin: 0;
@@ -741,7 +717,6 @@ body {
   border-radius: 5px;
   font-weight: bold;
 }
-
 
 .category-card:hover .category-label {
   visibility: visible; /* Revealed on hover */

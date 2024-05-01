@@ -217,12 +217,7 @@ tr:hover {
 </footer>
 
 <script>
-    // JavaScript function to update user's account type
-    function updateAccountType(userId, newAccountType) {
-        if (confirm('Are you sure you want to update this user\'s account type?')) {
-            window.location.href = `admin_dashboard.php?action=update_account_type&user_id=${userId}&new_account_type=${newAccountType}`;
-        }
-    }
+ 
 </script>
 </body>
 </html>
